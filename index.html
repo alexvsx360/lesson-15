@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript – שיעור 15: Git + GitHub</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+  <div class="slideshow-container">
+    <div class="top-bar">
+      <div class="progress">
+        <div id="progressFill"></div>
+      </div>
+      <div id="slideCounter">1 / 22</div>
+    </div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+      <h1 class="title-main">JavaScript למתחילים</h1>
+      <h2 class="title-sub">שיעור 15 – Git + GitHub</h2>
+      <p class="subtitle">ניהול גרסאות ושיתוף קוד - כל מה שצריך לדעת</p>
+    </div>
+
+    <!-- Slide 2: Goals -->
+    <div class="slide">
+      <h2>מה נלמד היום? 🎯</h2>
+      <div class="grid two-cols">
+        <div class="card accent">
+          <h3>חלק א' - מבוא ל-Git</h3>
+          <ul>
+            <li>מה זה Git?</li>
+            <li>למה צריך Git?</li>
+            <li>התקנה והגדרה</li>
+            <li>Repository - מה זה?</li>
+          </ul>
+        </div>
+        <div class="card accent-2">
+          <h3>חלק ב' - פקודות בסיסיות</h3>
+          <ul>
+            <li>git init, add, commit</li>
+            <li>git status, log</li>
+            <li>.gitignore</li>
+            <li>עבודה עם קבצים</li>
+          </ul>
+        </div>
+        <div class="card accent">
+          <h3>חלק ג' - GitHub</h3>
+          <ul>
+            <li>מה זה GitHub?</li>
+            <li>יצירת Repository</li>
+            <li>git remote, push, pull</li>
+            <li>git clone</li>
+          </ul>
+        </div>
+        <div class="card accent-2">
+          <h3>חלק ד' - עבודה מתקדמת</h3>
+          <ul>
+            <li>Branches - ענפים</li>
+            <li>Merge - מיזוג</li>
+            <li>Pull Requests</li>
+            <li>שיתוף פעולה</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note">
+        <strong>מטרה:</strong> בסוף השיעור תבינו איך לנהל גרסאות של הקוד שלכם, לשתף אותו עם אחרים, ולעבוד בצוות. זה כלי חיוני לכל מפתח!
+      </div>
+    </div>
+
+    <!-- Slide 3: מה זה Git? -->
+    <div class="slide">
+      <h2>מה זה Git? 📦</h2>
+      <p dir="rtl"><strong>Git</strong> הוא מערכת ניהול גרסאות (Version Control System) - כלי שמאפשר לעקוב אחר שינויים בקוד ולשמור היסטוריה של כל השינויים.</p>
+      
+      <div class="info-box">
+        <h4>למה Git חשוב?</h4>
+        <ul>
+          <li><strong>היסטוריה:</strong> רואים את כל השינויים שעשיתם</li>
+          <li><strong>גיבוי:</strong> הקוד שמור - לא מאבדים עבודה</li>
+          <li><strong>שיתוף:</strong> קל לשתף קוד עם אחרים</li>
+          <li><strong>שיתוף פעולה:</strong> כמה אנשים יכולים לעבוד על אותו פרויקט</li>
+          <li><strong>חזרה אחורה:</strong> אפשר לחזור לגרסה קודמת</li>
+        </ul>
+      </div>
+
+      <h3>דוגמה - בלי Git:</h3>
+      <pre><code class="language-bash"># קבצים ישנים - מבלבל!
+project-v1.js
+project-v2.js
+project-v2-final.js
+project-v2-final-really.js
+project-v3.js
+# איזה קובץ הוא הנוכחי? מה השתנה? 😕</code></pre>
+
+      <h3>עם Git:</h3>
+      <pre><code class="language-bash"># קובץ אחד - Git שומר את ההיסטוריה
+project.js
+# Git יודע בדיוק מה השתנה ומתי! ✅</code></pre>
+    </div>
+
+    <!-- Slide 4: התקנה והגדרה -->
+    <div class="slide">
+      <h2>התקנה והגדרה ⚙️</h2>
+      
+      <h3>1. התקנת Git:</h3>
+      <div class="command-box">
+        <h4>Windows:</h4>
+        <p>הורידו מ-<a href="https://git-scm.com/download/win" target="_blank">git-scm.com</a> והתקינו</p>
+        
+        <h4>Mac:</h4>
+        <code>brew install git</code>
+        
+        <h4>Linux:</h4>
+        <code>sudo apt-get install git</code>
+      </div>
+
+      <h3>2. הגדרת זהות:</h3>
+      <pre><code class="language-bash"># הגדרת שם
+git config --global user.name "דני כהן"
+
+# הגדרת אימייל
+git config --global user.email "danny@example.com"
+
+# בדיקה
+git config --global --list</code></pre>
+
+      <h3>3. בדיקה שההתקנה עבדה:</h3>
+      <pre><code class="language-bash">git --version
+# Git version 2.40.0</code></pre>
+
+      <div class="note">
+        <strong>חשוב:</strong> הגדרת זהות פעם אחת - Git ישתמש בזה לכל ה-commits שלכם.
+      </div>
+    </div>
+
+    <!-- Slide 5: Repository - מה זה? -->
+    <div class="slide">
+      <h2>Repository - מה זה? 📁</h2>
+      <p dir="rtl"><strong>Repository</strong> (או בקיצור "repo") הוא תיקיית פרויקט שמנוהלת על ידי Git. Git עוקב אחר כל הקבצים בתיקייה הזו.</p>
+      
+      <h3>יצירת Repository חדש:</h3>
+      <pre><code class="language-bash"># נווט לתיקיית הפרויקט
+cd my-project
+
+# אתחל Git repository
+git init
+
+# Git יצר תיקייה נסתרת .git
+# עכשיו Git עוקב אחר כל הקבצים כאן!</code></pre>
+
+      <h3>מה קורה ב-git init?</h3>
+      <div class="card">
+        <ul>
+          <li>נוצרת תיקייה נסתרת <code>.git</code></li>
+          <li>Git מתחיל לעקוב אחר הקבצים בתיקייה</li>
+          <li>התיקייה הופכת ל-Repository</li>
+          <li>עכשיו אפשר להשתמש בפקודות Git</li>
+        </ul>
+      </div>
+
+      <div class="warning-box">
+        <h4>⚠️ זהירות:</h4>
+        <p>אל תמחקו את התיקייה <code>.git</code>! היא מכילה את כל ההיסטוריה של הפרויקט.</p>
+      </div>
+    </div>
+
+    <!-- Slide 6: פקודות בסיסיות - git add -->
+    <div class="slide">
+      <h2>פקודות בסיסיות - git add 📝</h2>
+      <p dir="rtl"><code>git add</code> מוסיף קבצים ל-Staging Area - "אזור ההכנה" לפני ה-commit.</p>
+      
+      <h3>שלושה שלבים:</h3>
+      <div class="flow-diagram" style="text-align: right; direction: rtl;">
+        <div class="flow-step">1. Working Directory<br>(קבצים שערכתם)</div>
+        <div class="flow-arrow">↓ git add</div>
+        <div class="flow-step">2. Staging Area<br>(קבצים מוכנים ל-commit)</div>
+        <div class="flow-arrow">↓ git commit</div>
+        <div class="flow-step">3. Repository<br>(commits שמורים)</div>
+      </div>
+
+      <h3>דוגמאות:</h3>
+      <pre><code class="language-bash"># הוסף קובץ אחד
+git add index.html
+
+# הוסף כל הקבצים בתיקייה
+git add .
+
+# הוסף כל הקבצים עם סיומת מסוימת
+git add *.js
+
+# הוסף תיקייה שלמה
+git add src/</code></pre>
+
+      <h3>בדיקת סטטוס:</h3>
+      <pre><code class="language-bash">git status
+# מציג אילו קבצים שונו, אילו ב-staging, וכו'</code></pre>
+    </div>
+
+    <!-- Slide 7: git commit -->
+    <div class="slide">
+      <h2>git commit - שמירת שינויים 💾</h2>
+      <p dir="rtl"><code>git commit</code> שומר את השינויים ב-Staging Area כ-commit - "צילום" של המצב הנוכחי.</p>
+      
+      <h3>יצירת commit:</h3>
+      <pre><code class="language-bash"># Commit עם הודעה
+git commit -m "הוספתי כפתור התחברות"
+
+# הודעה מפורטת
+git commit -m "הוספתי כפתור התחברות
+
+- הוספתי HTML לכפתור
+- הוספתי CSS לעיצוב
+- הוספתי JavaScript לפונקציונליות"</code></pre>
+
+      <h3>עקרון חשוב:</h3>
+      <div class="highlight-box">
+        <h4>Commit קטן ומובן</h4>
+        <ul>
+          <li>כל commit צריך להיות <strong>שינוי אחד לוגי</strong></li>
+          <li>הודעה ברורה - מה השתנה ולמה</li>
+          <li>דוגמאות טובות: "תיקנתי באג בחישוב מחיר", "הוספתי תמיכה ב-RTL"</li>
+          <li>דוגמאות רעות: "שינויים", "עדכון", "fix"</li>
+        </ul>
+      </div>
+
+      <h3>תהליך מלא:</h3>
+      <pre><code class="language-bash"># 1. ערוך קבצים
+# 2. בדוק מה השתנה
+git status
+
+# 3. הוסף staging
+git add .
+
+# 4. Commit
+git commit -m "הוספתי תכונה חדשה"
+
+# 5. בדוק את ההיסטוריה
+git log</code></pre>
+    </div>
+
+    <!-- Slide 8: git status & log -->
+    <div class="slide">
+      <h2>git status & log - מידע על הפרויקט 📊</h2>
+      
+      <h3>git status - מצב נוכחי:</h3>
+      <pre><code class="language-bash">git status
+
+# פלט לדוגמה:
+# On branch main
+# Changes not staged for commit:
+#   modified:   index.html
+#   modified:   style.css
+# 
+# Untracked files:
+#   new-file.js
+# 
+# Changes to be committed:
+#   modified:   script.js</code></pre>
+
+      <h3>git log - היסטוריית commits:</h3>
+      <pre><code class="language-bash"># היסטוריה מלאה
+git log
+
+# היסטוריה קצרה (שורה אחת לכל commit)
+git log --oneline
+
+# היסטוריה עם גרף
+git log --oneline --graph
+
+# רק 5 האחרונים
+git log -5</code></pre>
+
+      <h3>git diff - מה השתנה?</h3>
+      <pre><code class="language-bash"># מה השתנה בקבצים שעדיין לא ב-staging
+git diff
+
+# מה השתנה בקבצים ב-staging
+git diff --staged
+
+# מה השתנה בקובץ מסוים
+git diff index.html</code></pre>
+    </div>
+
+    <!-- Slide 9: .gitignore -->
+    <div class="slide">
+      <h2>.gitignore - קבצים להתעלם מהם 🚫</h2>
+      <p dir="rtl"><code>.gitignore</code> הוא קובץ שאומר ל-Git אילו קבצים <strong>לא</strong> לעקוב אחריהם.</p>
+      
+      <h3>למה צריך .gitignore?</h3>
+      <div class="card">
+        <ul>
+          <li><strong>node_modules/</strong> - תיקייה גדולה, לא צריך לשמור</li>
+          <li><strong>קבצי build</strong> - נוצרים אוטומטית</li>
+          <li><strong>קבצי סביבה</strong> - .env עם סיסמאות</li>
+          <li><strong>קבצי IDE</strong> - .vscode, .idea</li>
+          <li><strong>קבצים זמניים</strong> - .log, .tmp</li>
+        </ul>
+      </div>
+
+      <h3>דוגמה ל-.gitignore:</h3>
+      <pre><code class="language-bash"># node_modules
+node_modules/
+
+# קבצי סביבה
+.env
+.env.local
+
+# קבצי build
+dist/
+build/
+
+# קבצי IDE
+.vscode/
+.idea/
+
+# קבצים זמניים
+*.log
+*.tmp
+.DS_Store
+
+# אבל שמור את זה:
+!important.log</code></pre>
+
+      <h3>יצירת .gitignore:</h3>
+      <pre><code class="language-bash"># צור קובץ .gitignore
+touch .gitignore
+
+# או ערוך אותו
+nano .gitignore
+# הוסף את הקבצים/תיקיות להתעלם מהם</code></pre>
+
+      <div class="note">
+        <strong>טיפ:</strong> יש templates מוכנים ל-.gitignore לפי סוג הפרויקט (Node.js, Python, וכו') ב-<a href="https://github.com/github/gitignore" target="_blank">github.com/github/gitignore</a>
+      </div>
+    </div>
+
+    <!-- Slide 10: מה זה GitHub? -->
+    <div class="slide">
+      <h2>מה זה GitHub? 🌐</h2>
+      <p dir="rtl"><strong>GitHub</strong> הוא שירות אירוח (hosting) ל-Git repositories. זה כמו "Google Drive" לקוד - מקום לשמור ולשתף את הקוד שלכם.</p>
+      
+      <div class="comparison-box">
+        <div class="comparison-item">
+          <h4>Git</h4>
+          <ul>
+            <li>כלי מקומי</li>
+            <li>על המחשב שלכם</li>
+            <li>ניהול גרסאות</li>
+            <li>פקודות command line</li>
+          </ul>
+        </div>
+        <div class="comparison-item">
+          <h4>GitHub</h4>
+          <ul>
+            <li>שירות מקוון</li>
+            <li>בענן</li>
+            <li>אירוח ושיתוף</li>
+            <li>ממשק web + Git</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>יתרונות GitHub:</h3>
+      <div class="card">
+        <ul>
+          <li><strong>גיבוי בענן:</strong> הקוד שמור גם אם המחשב נשבר</li>
+          <li><strong>שיתוף קל:</strong> קל לשתף קוד עם אחרים</li>
+          <li><strong>שיתוף פעולה:</strong> כמה אנשים יכולים לעבוד יחד</li>
+          <li><strong>Portfolio:</strong> מציג את הפרויקטים שלכם</li>
+          <li><strong>Issues & PRs:</strong> כלים לניהול פרויקטים</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <h4>💡 חלופות ל-GitHub:</h4>
+        <ul>
+          <li><strong>GitLab:</strong> דומה ל-GitHub, עם יותר תכונות</li>
+          <li><strong>Bitbucket:</strong> שירות נוסף</li>
+          <li><strong>GitHub Enterprise:</strong> גרסה ארגונית</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 11: יצירת Repository ב-GitHub -->
+    <div class="slide">
+      <h2>יצירת Repository ב-GitHub 🆕</h2>
+      
+      <h3>שלבים:</h3>
+      <div class="card">
+        <ol style="padding-right: 20px;">
+          <li>היכנסו ל-<a href="https://github.com" target="_blank">github.com</a></li>
+          <li>הירשמו/התחברו</li>
+          <li>לחצו על <strong>"+"</strong> → <strong>"New repository"</strong></li>
+          <li>מלאו פרטים:
+            <ul style="padding-right: 20px; margin-top: 8px;">
+              <li><strong>Repository name:</strong> שם הפרויקט</li>
+              <li><strong>Description:</strong> תיאור קצר</li>
+              <li><strong>Public/Private:</strong> ציבורי או פרטי</li>
+              <li><strong>Initialize with README:</strong> אפשר לסמן</li>
+            </ul>
+          </li>
+          <li>לחצו <strong>"Create repository"</strong></li>
+        </ol>
+      </div>
+
+      <h3>חיבור Repository מקומי ל-GitHub:</h3>
+      <pre><code class="language-bash"># אם כבר יש לכם repository מקומי
+git remote add origin https://github.com/username/repo-name.git
+
+# בדיקה
+git remote -v
+
+# שליחה ל-GitHub
+git push -u origin main</code></pre>
+
+      <h3>או - יצירה חדשה:</h3>
+      <pre><code class="language-bash"># צרו repository חדש
+git init
+git add .
+git commit -m "Initial commit"
+
+# חיבור ל-GitHub
+git remote add origin https://github.com/username/repo-name.git
+git branch -M main
+git push -u origin main</code></pre>
+    </div>
+
+    <!-- Slide 12: git push & pull -->
+    <div class="slide">
+      <h2>git push & pull - שליחה וקבלה 📤📥</h2>
+      
+      <h3>git push - שליחה ל-GitHub:</h3>
+      <pre><code class="language-bash"># שליחת commits ל-GitHub
+git push
+
+# בפעם הראשונה - ציין branch
+git push -u origin main
+
+# אחר כך אפשר פשוט:
+git push</code></pre>
+
+      <h3>git pull - קבלה מ-GitHub:</h3>
+      <pre><code class="language-bash"># משיכת שינויים מ-GitHub
+git pull
+
+# זה בעצם:
+# git fetch (מביא שינויים)
+# + git merge (ממזג אותם)</code></pre>
+
+      <h3>תרחיש נפוץ:</h3>
+      <pre><code class="language-bash"># עבדתם על המחשב בבית
+git add .
+git commit -m "הוספתי תכונה חדשה"
+git push
+
+# עכשיו במחשב אחר (עבודה)
+git pull  # מביא את השינויים מהבית
+
+# עבדתם בעבודה
+git add .
+git commit -m "תיקנתי באג"
+git push
+
+# חזרתם הביתה
+git pull  # מביא את השינויים מהעבודה</code></pre>
+
+      <div class="warning-box">
+        <h4>⚠️ זהירות - Conflicts:</h4>
+        <p>אם שני אנשים שינו את אותו קובץ, Git יבקש מכם לפתור את ה-conflict. זה נושא מתקדם יותר.</p>
+      </div>
+    </div>
+
+    <!-- Slide 13: git clone -->
+    <div class="slide">
+      <h2>git clone - העתקת Repository 📋</h2>
+      <p dir="rtl"><code>git clone</code> מעתיק repository מ-GitHub (או ממקום אחר) למחשב שלכם.</p>
+      
+      <h3>שימוש:</h3>
+      <pre><code class="language-bash"># העתק repository
+git clone https://github.com/username/repo-name.git
+
+# עם שם תיקייה מותאם
+git clone https://github.com/username/repo-name.git my-project
+
+# זה יוצר תיקייה חדשה עם כל הקוד!</code></pre>
+
+      <h3>מתי משתמשים?</h3>
+      <div class="card">
+        <ul>
+          <li><strong>התחלת עבודה על פרויקט:</strong> מישהו אחר יצר repository</li>
+          <li><strong>העתקת פרויקט:</strong> רוצים לעבוד עליו מקומית</li>
+          <li><strong>Fork:</strong> רוצים לעבוד על פרויקט של מישהו אחר</li>
+          <li><strong>תיקון באגים:</strong> רוצים לעזור בפרויקט קוד פתוח</li>
+        </ul>
+      </div>
+
+      <h3>דוגמה מעשית:</h3>
+      <pre><code class="language-bash"># מצאתם פרויקט מעניין ב-GitHub
+# לחצתם על "Code" → העתקתם את ה-URL
+
+# העתקה
+git clone https://github.com/username/awesome-project.git
+
+# נכנסים לתיקייה
+cd awesome-project
+
+# עכשיו יש לכם את כל הקוד מקומית!</code></pre>
+    </div>
+
+    <!-- Slide 14: Branches - מבוא -->
+    <div class="slide">
+      <h2>Branches - ענפים 🌿</h2>
+      <p dir="rtl"><strong>Branch</strong> (ענף) הוא "עותק" של הקוד שבו אפשר לעבוד בלי להשפיע על הקוד הראשי.</p>
+      
+      <h3>למה צריך Branches?</h3>
+      <div class="card">
+        <ul>
+          <li><strong>עבודה על תכונה חדשה:</strong> לא רוצים לשבור את הקוד הקיים</li>
+          <li><strong>תיקון באגים:</strong> עובדים על תיקון בנפרד</li>
+          <li><strong>ניסויים:</strong> מנסים משהו חדש בלי סיכון</li>
+          <li><strong>שיתוף פעולה:</strong> כל אחד עובד על branch שלו</li>
+        </ul>
+      </div>
+
+      <h3>יצירת Branch:</h3>
+      <pre><code class="language-bash"># צור branch חדש
+git branch feature-login
+
+# עבור ל-branch
+git checkout feature-login
+
+# או - צור ועבור בבת אחת
+git checkout -b feature-login
+
+# ב-Git 2.23+ אפשר גם:
+git switch -c feature-login</code></pre>
+
+      <h3>רשימת Branches:</h3>
+      <pre><code class="language-bash"># רשימת כל ה-branches
+git branch
+
+# עם * על ה-branch הנוכחי
+# * main
+#   feature-login
+#   bugfix-header</code></pre>
+    </div>
+
+    <!-- Slide 15: git merge -->
+    <div class="slide">
+      <h2>git merge - מיזוג ענפים 🔀</h2>
+      <p dir="rtl"><code>git merge</code> ממזג שינויים מ-branch אחד ל-branch אחר.</p>
+      
+      <h3>תהליך מיזוג:</h3>
+      <pre><code class="language-bash"># 1. עבדתם על feature branch
+git checkout feature-login
+# ... עבדתם, עשיתם commits ...
+
+# 2. חזרו ל-main
+git checkout main
+
+# 3. מיזוג ה-feature ל-main
+git merge feature-login
+
+# 4. שליחה ל-GitHub
+git push</code></pre>
+
+      <h3>דוגמה מעשית:</h3>
+      <pre><code class="language-bash"># התחלתם לעבוד על תכונה חדשה
+git checkout -b add-dark-mode
+
+# עבדתם על התכונה
+git add .
+git commit -m "הוספתי מצב כהה"
+git commit -m "תיקנתי באגים במצב כהה"
+
+# התכונה מוכנה - מיזוג ל-main
+git checkout main
+git merge add-dark-mode
+
+# אפשר למחוק את ה-branch (לא חובה)
+git branch -d add-dark-mode</code></pre>
+
+      <div class="info-box">
+        <h4>💡 Best Practice:</h4>
+        <ul>
+          <li>עבדו על feature branch, לא על main</li>
+          <li>מיזגו ל-main רק כשהתכונה מוכנה</li>
+          <li>מחקו branches ישנים אחרי מיזוג</li>
+          <li>שמרו על main נקי ויציב</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 16: Pull Requests -->
+    <div class="slide">
+      <h2>Pull Requests - בקשות מיזוג 🔄</h2>
+      <p dir="rtl"><strong>Pull Request</strong> (PR) הוא דרך לבקש למזג שינויים מ-branch אחד ל-branch אחר ב-GitHub. זה מאפשר לבדוק ולשוחח על השינויים לפני המיזוג.</p>
+      
+      <h3>תהליך Pull Request:</h3>
+      <div class="card">
+        <ol style="padding-right: 20px;">
+          <li><strong>עבדתם על branch:</strong> יצרתם feature branch ועשיתם commits</li>
+          <li><strong>שלחתם ל-GitHub:</strong> <code>git push</code></li>
+          <li><strong>יצירת PR:</strong> ב-GitHub, לחצו "New Pull Request"</li>
+          <li><strong>בחירת branches:</strong> מ-feature ל-main</li>
+          <li><strong>תיאור:</strong> הסבירו מה השתנה ולמה</li>
+          <li><strong>ביקורת:</strong> אחרים יכולים לבדוק ולהוסיף הערות</li>
+          <li><strong>מיזוג:</strong> אחרי אישור - "Merge Pull Request"</li>
+        </ol>
+      </div>
+
+      <h3>יתרונות Pull Requests:</h3>
+      <div class="card">
+        <ul>
+          <li><strong>ביקורת קוד:</strong> אחרים יכולים לבדוק את השינויים</li>
+          <li><strong>דיון:</strong> אפשר לדון על השינויים</li>
+          <li><strong>בדיקות:</strong> אפשר להריץ בדיקות אוטומטיות</li>
+          <li><strong>היסטוריה:</strong> רואים למה שינויים נעשו</li>
+          <li><strong>למידה:</strong> לומדים מקוד של אחרים</li>
+        </ul>
+      </div>
+
+      <h3>דוגמה - PR טוב:</h3>
+      <pre><code class="language-markdown">## מה השתנה?
+הוספתי מצב כהה לאפליקציה
+
+## למה?
+משתמשים ביקשו תמיכה במצב כהה
+
+## מה נבדק?
+- [x] עובד על Chrome
+- [x] עובד על Firefox
+- [x] נבדק על מובייל
+
+## תמונות
+[תמונות של המצב הכהה]</code></pre>
+    </div>
+
+    <!-- Slide 17: עבודה בצוות -->
+    <div class="slide">
+      <h2>עבודה בצוות - Best Practices 👥</h2>
+      
+      <h3>עקרונות חשובים:</h3>
+      <div class="grid two-cols">
+        <div class="card">
+          <h4>1. Pull לפני עבודה</h4>
+          <pre><code class="language-bash"># תמיד משיכו שינויים לפני התחלת עבודה
+git pull</code></pre>
+        </div>
+        <div class="card">
+          <h4>2. Commits קטנים</h4>
+          <p>כל commit = שינוי אחד לוגי</p>
+        </div>
+        <div class="card">
+          <h4>3. הודעות ברורות</h4>
+          <p>"תיקנתי באג" במקום "fix"</p>
+        </div>
+        <div class="card">
+          <h4>4. עבדו על branches</h4>
+          <p>לא על main ישירות</p>
+        </div>
+      </div>
+
+      <h3>תהליך עבודה מומלץ:</h3>
+      <pre><code class="language-bash"># 1. משיכת שינויים
+git pull
+
+# 2. יצירת branch חדש
+git checkout -b feature-new-button
+
+# 3. עבודה
+# ... עריכת קבצים ...
+
+# 4. Commit
+git add .
+git commit -m "הוספתי כפתור חדש"
+
+# 5. שליחה
+git push
+
+# 6. יצירת Pull Request ב-GitHub
+
+# 7. אחרי אישור - מיזוג
+# (ב-GitHub או מקומית)</code></pre>
+
+      <h3>טיפים נוספים:</h3>
+      <div class="note">
+        <ul>
+          <li><strong>תקשורת:</strong> דברו עם הצוות לפני שינויים גדולים</li>
+          <li><strong>Code Review:</strong> בקשו מאחרים לבדוק את הקוד שלכם</li>
+          <li><strong>תיעוד:</strong> כתבו README טוב</li>
+          <li><strong>Issues:</strong> השתמשו ב-Issues לניהול משימות</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 18: דוגמה מעשית - תהליך מלא -->
+    <div class="slide">
+      <h2>דוגמה מעשית - תהליך מלא 🎯</h2>
+      
+      <h3>תרחיש: הוספת תכונה חדשה לפרויקט</h3>
+      <pre><code class="language-bash"># 1. התחלת יום עבודה - משיכת שינויים
+git pull
+
+# 2. יצירת branch לתכונה חדשה
+git checkout -b feature-user-profile
+
+# 3. עבודה על התכונה
+# ... עריכת קבצים ...
+
+# 4. בדיקת שינויים
+git status
+git diff
+
+# 5. הוספה ל-staging
+git add .
+
+# 6. Commit
+git commit -m "הוספתי עמוד פרופיל משתמש
+- HTML לעמוד פרופיל
+- CSS לעיצוב
+- JavaScript לטעינת נתונים"
+
+# 7. עוד עבודה...
+git add .
+git commit -m "תיקנתי באג בטעינת תמונה"
+
+# 8. שליחה ל-GitHub
+git push -u origin feature-user-profile
+
+# 9. יצירת Pull Request ב-GitHub
+# (דרך הממשק)
+
+# 10. אחרי אישור - מיזוג
+git checkout main
+git pull
+# (המיזוג נעשה ב-GitHub)
+
+# 11. מחיקת branch מקומי
+git branch -d feature-user-profile</code></pre>
+    </div>
+
+    <!-- Slide 19: שאלות כיתה -->
+    <div class="slide">
+      <h2>שאלות כיתה – Git + GitHub 🧠</h2>
+      <div class="questions-list">
+        <div class="question-item">
+          <h4>1. מה ההבדל בין Git ל-GitHub? מתי משתמשים בכל אחד?</h4>
+          <button
+            type="button"
+            class="primary-btn answer-toggle"
+            data-answer-id="answer1"
+          >
+            הצג תשובה
+          </button>
+          <p id="answer1" class="answer d-none">
+            <strong>Git:</strong> כלי מקומי לניהול גרסאות - רץ על המחשב שלכם. משתמשים בו לניהול גרסאות מקומית - commits, branches, history, וכו'.<br><br>
+            <strong>GitHub:</strong> שירות מקוון לאירוח Git repositories. משתמשים בו לשמירת קוד בענן, שיתוף עם אחרים, שיתוף פעולה, Pull Requests, Issues, וכו'.<br><br>
+            <strong>מתי משתמשים:</strong> Git - כל פעם שעובדים על קוד (מקומית). GitHub - כשצריך לשתף, לגבות בענן, או לעבוד בצוות. בדרך כלל משתמשים בשניהם יחד - Git לניהול מקומי, GitHub לאירוח ושיתוף.
+          </p>
+        </div>
+
+        <div class="question-item">
+          <h4>2. מה ההבדל בין git add, git commit, ו-git push? מה כל אחד עושה?</h4>
+          <button
+            type="button"
+            class="primary-btn answer-toggle"
+            data-answer-id="answer2"
+          >
+            הצג תשובה
+          </button>
+          <p id="answer2" class="answer d-none">
+            <strong>git add:</strong> מוסיף קבצים ל-Staging Area - "מכין" אותם ל-commit. זה לא שומר את השינויים, רק מסמן אותם כמוכנים.<br><br>
+            <strong>git commit:</strong> שומר את השינויים ב-Staging Area כ-commit - "צילום" של המצב הנוכחי. זה יוצר snapshot שמור ב-repository המקומי.<br><br>
+            <strong>git push:</strong> שולח את ה-commits מ-repository מקומי ל-GitHub (או שרת אחר). זה מעלה את הקוד לענן.<br><br>
+            <strong>אנלוגיה:</strong> git add = הכנת חבילה, git commit = חתימה על החבילה, git push = שליחת החבילה בדואר.
+          </p>
+        </div>
+
+        <div class="question-item">
+          <h4>3. מה זה Branch ולמה צריך אותו? מתי יוצרים branch חדש?</h4>
+          <button
+            type="button"
+            class="primary-btn answer-toggle"
+            data-answer-id="answer3"
+          >
+            הצג תשובה
+          </button>
+          <p id="answer3" class="answer d-none">
+            <strong>Branch:</strong> "עותק" של הקוד שבו אפשר לעבוד בלי להשפיע על הקוד הראשי (main). זה כמו יצירת עותק של מסמך לעריכה.<br><br>
+            <strong>למה צריך:</strong> כדי לעבוד על תכונות חדשות, תיקוני באגים, או ניסויים בלי לשבור את הקוד הקיים. זה מאפשר לעבוד בצוות - כל אחד על branch שלו.<br><br>
+            <strong>מתי יוצרים:</strong> כשמתחילים לעבוד על תכונה חדשה, תיקון באג, או ניסוי. הרעיון הוא לשמור את main נקי ויציב, ולעבוד על branches נפרדים. אחרי שהעבודה מוכנה, ממזגים את ה-branch ל-main.
+          </p>
+        </div>
+
+        <div class="question-item">
+          <h4>4. מה זה Pull Request? מה התהליך המלא של יצירת PR?</h4>
+          <button
+            type="button"
+            class="primary-btn answer-toggle"
+            data-answer-id="answer4"
+          >
+            הצג תשובה
+          </button>
+          <p id="answer4" class="answer d-none">
+            <strong>Pull Request (PR):</strong> בקשה למזג שינויים מ-branch אחד ל-branch אחר. זה מאפשר לבדוק ולדון על השינויים לפני המיזוג.<br><br>
+            <strong>תהליך מלא:</strong><br>
+            1. עובדים על feature branch (לא על main)<br>
+            2. עושים commits<br>
+            3. שולחים ל-GitHub: <code>git push</code><br>
+            4. ב-GitHub: לחצו "New Pull Request"<br>
+            5. בחרו branches: מ-feature ל-main<br>
+            6. כתבו תיאור: מה השתנה ולמה<br>
+            7. בקשו review: אחרים יכולים לבדוק ולהוסיף הערות<br>
+            8. אחרי אישור: "Merge Pull Request"<br>
+            9. מחיקת branch (לא חובה)<br><br>
+            <strong>יתרונות:</strong> ביקורת קוד, דיון, בדיקות אוטומטיות, היסטוריה, למידה.
+          </p>
+        </div>
+
+        <div class="question-item">
+          <h4>5. מה זה .gitignore ולמה חשוב להשתמש בו? תן דוגמאות לקבצים שצריך להתעלם מהם.</h4>
+          <button
+            type="button"
+            class="primary-btn answer-toggle"
+            data-answer-id="answer5"
+          >
+            הצג תשובה
+          </button>
+          <p id="answer5" class="answer d-none">
+            <strong>.gitignore:</strong> קובץ שאומר ל-Git אילו קבצים/תיקיות <strong>לא</strong> לעקוב אחריהם - להתעלם מהם.<br><br>
+            <strong>למה חשוב:</strong> יש קבצים שלא רוצים לשמור ב-Git - node_modules (גדול מדי), קבצי סביבה (.env עם סיסמאות), קבצי build (נוצרים אוטומטית), קבצי IDE, וכו'. בלי .gitignore, כל הקבצים האלה יכנסו ל-repository ויגדילו אותו ויחשפו מידע רגיש.<br><br>
+            <strong>דוגמאות לקבצים להתעלם:</strong><br>
+            • <code>node_modules/</code> - תיקיית dependencies<br>
+            • <code>.env</code> - קבצי סביבה עם סיסמאות<br>
+            • <code>dist/</code>, <code>build/</code> - קבצי build<br>
+            • <code>.vscode/</code>, <code>.idea/</code> - קבצי IDE<br>
+            • <code>*.log</code>, <code>*.tmp</code> - קבצים זמניים<br>
+            • <code>.DS_Store</code> - קבצי מערכת (Mac)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 20: סיכום -->
+    <div class="slide">
+      <h2>סיכום שיעור 15 🎓</h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <h3>מה למדנו היום?</h3>
+          <ul>
+            <li>מה זה Git ו-GitHub</li>
+            <li>התקנה והגדרה</li>
+            <li>Repository - יצירה וניהול</li>
+            <li>פקודות בסיסיות: init, add, commit</li>
+            <li>git status, log, diff</li>
+            <li>.gitignore - קבצים להתעלם</li>
+            <li>GitHub - יצירת repository</li>
+            <li>git remote, push, pull, clone</li>
+            <li>Branches - ענפים</li>
+            <li>git merge - מיזוג</li>
+            <li>Pull Requests</li>
+            <li>עבודה בצוות - Best Practices</li>
+          </ul>
+        </div>
+        <div class="summary-card">
+          <h3>מה לקחת להמשך?</h3>
+          <ul>
+            <li>השתמשו ב-Git לכל פרויקט - זה כלי חיוני!</li>
+            <li>עשו commits קטנים עם הודעות ברורות</li>
+            <li>השתמשו ב-.gitignore - אל תשמרו קבצים מיותרים</li>
+            <li>עבדו על branches - לא על main ישירות</li>
+            <li>תמיד pull לפני התחלת עבודה</li>
+            <li>השתמשו ב-Pull Requests - זה עוזר לביקורת קוד</li>
+            <li>תקשרו עם הצוות - Git הוא כלי שיתופי</li>
+            <li>תתרגלו - זה נהיה טבעי עם הזמן!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="final-note">
+        <h3>🎉 עכשיו אתם יודעים איך לנהל גרסאות ולשתף קוד!</h3>
+        <p style="margin-top: 12px; margin-bottom: 0;">
+          Git ו-GitHub הם כלים חיוניים לכל מפתח. הידע הזה יעזור לכם לעבוד בצורה מקצועית, לשתף קוד, ולעבוד בצוות. זה הבסיס לכל עבודת פיתוח מודרנית!
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav">
+      <button id="prevBtn" class="primary-btn">◀ הקודם</button>
+      <button id="nextBtn" class="primary-btn">הבא ▶</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
